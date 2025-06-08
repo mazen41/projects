@@ -1,24 +1,21 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import { GlobalStyle } from './styles/globalStyles';
+import AnimatedHeader from './components/AnimatedHeader';
+import LoveLetter from './components/LoveLetter';
+import DailyMessage from './components/DailyMessage';
+import FloatingHearts from './components/FloatingHearts';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <GlobalStyle />
+      <FloatingHearts />
+      <AnimatedHeader />
+      <div style={{ maxWidth: '900px', margin: '0 auto', padding: '0 20px 50px' }}>
+        <LoveLetter />
+        <DailyMessage />
+      </div>
+    </>
   );
 }
 
