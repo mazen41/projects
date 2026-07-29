@@ -7,14 +7,27 @@ const spin = keyframes`
   to { transform: rotate(360deg); }
 `;
 
-const FloatingButton = styled.button`
+const pulse = keyframes`
+  0% { box-shadow: 0 0 0 0 rgba(255, 106, 136, 0.55); }
+  70% { box-shadow: 0 0 0 18px rgba(255, 106, 136, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 106, 136, 0); }
+`;
+
+const PlayerWrapper = styled.div`
   position: fixed;
   bottom: 25px;
   left: 25px;
-  width: 60px;
-  height: 60px;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+`;
+
+const FloatingButton = styled.button`
+  width: 62px;
+  height: 62px;
   border-radius: 50%;
-  border: none;
+  border: 2px solid rgba(255, 255, 255, 0.6);
   background: linear-gradient(135deg, #ff9a8b 0%, #ff6a88 45%, #ffb347 100%);
   color: white;
   font-size: 1.4rem;
@@ -23,23 +36,53 @@ const FloatingButton = styled.button`
   justify-content: center;
   cursor: pointer;
   box-shadow: 0 4px 15px rgba(210, 54, 105, 0.4);
-  z-index: 999;
   transition: transform 0.2s ease;
+  animation: ${({ $playing }) => ($playing ? pulse : 'none')} 2.2s infinite;
 
   &:hover {
     transform: scale(1.08);
   }
 
-  svg {
-    animation: ${({ $playing }) => ($playing ? spin : 'none')} 3s linear infinite;
+  &:active {
+    transform: scale(0.95);
   }
+
+  svg {
+    animation: ${({ $playing }) => ($playing ? spin : 'none')} 3.5s linear infinite;
+  }
+`;
+
+const Bars = styled.div`
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 22px;
+  opacity: ${({ $playing }) => ($playing ? 1 : 0)};
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+
+  span {
+    display: block;
+    width: 4px;
+    border-radius: 3px;
+    background: linear-gradient(180deg, #ff6a88, #ffb347);
+  }
+
+  span:nth-child(1) { animation: bar1 1.1s ease-in-out infinite; }
+  span:nth-child(2) { animation: bar2 0.9s ease-in-out infinite; }
+  span:nth-child(3) { animation: bar3 1.3s ease-in-out infinite; }
+
+  @keyframes bar1 { 0%, 100% { height: 6px; } 50% { height: 20px; } }
+  @keyframes bar2 { 0%, 100% { height: 10px; } 50% { height: 22px; } }
+  @keyframes bar3 { 0%, 100% { height: 4px; } 50% { height: 16px; } }
 `;
 
 const Hint = styled.span`
   position: fixed;
   bottom: 32px;
-  left: 95px;
+  left: 98px;
   background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(4px);
   color: #d23669;
   padding: 8px 14px;
   border-radius: 20px;
@@ -56,40 +99,50 @@ const MusicPlayer = () => {
   const audioRef = useRef(null);
   const [playing, setPlaying] = useState(false);
   const [showHint, setShowHint] = useState(false);
+  const unlockedRef = useRef(false);
 
   useEffect(() => {
-    // try to autoplay on load; browsers may block sound before any user
-    // interaction with the page, so we fall back gracefully if blocked
-    const tryAutoplay = () => {
-      if (!audioRef.current) return;
-      audioRef.current.play()
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    // Step 1: start muted right away - virtually every mobile browser allows
+    // silent autoplay with no user gesture required at all.
+    audio.muted = true;
+    audio.play().catch(() => {});
+
+    // Step 2: the moment the user touches the page anywhere, unmute and
+    // make sure it's playing. Using {once:true} + multiple event types
+    // covers iOS Safari, Chrome Android, and desktop reliably.
+    const unlockAudio = () => {
+      if (unlockedRef.current) return;
+      unlockedRef.current = true;
+      audio.muted = false;
+      audio.play()
         .then(() => setPlaying(true))
-        .catch(() => {
-          // autoplay blocked by browser - wait for the first click/tap
-          // anywhere on the page, then start it automatically
-          setShowHint(true);
-          const startOnInteraction = () => {
-            audioRef.current.play().then(() => setPlaying(true)).catch(() => {});
-            setShowHint(false);
-            document.removeEventListener('click', startOnInteraction);
-            document.removeEventListener('touchstart', startOnInteraction);
-          };
-          document.addEventListener('click', startOnInteraction);
-          document.addEventListener('touchstart', startOnInteraction);
-        });
+        .catch(() => setShowHint(true));
     };
-    tryAutoplay();
+
+    const events = ['touchend', 'touchstart', 'pointerdown', 'click', 'keydown'];
+    events.forEach((evt) =>
+      document.addEventListener(evt, unlockAudio, { once: true, passive: true })
+    );
+
+    return () => {
+      events.forEach((evt) => document.removeEventListener(evt, unlockAudio));
+    };
   }, []);
 
   const toggle = () => {
     if (!audioRef.current) return;
+    unlockedRef.current = true;
     if (playing) {
       audioRef.current.pause();
+      setPlaying(false);
     } else {
-      audioRef.current.play().catch(() => {});
+      audioRef.current.muted = false;
+      audioRef.current.play().then(() => setPlaying(true)).catch(() => {});
       setShowHint(false);
     }
-    setPlaying(!playing);
   };
 
   return (
@@ -98,12 +151,20 @@ const MusicPlayer = () => {
         ref={audioRef}
         src="/Albumaty.Com_tamr_aashwr_hbk_rzk.mp3"
         loop
+        playsInline
         onEnded={() => setPlaying(false)}
       />
-      <FloatingButton onClick={toggle} $playing={playing} aria-label="تشغيل الأغنية">
-        {playing ? <FaPause /> : <FaMusic />}
-      </FloatingButton>
-      <Hint $show={showHint}>دوسي في أي مكان عشان تشتغل الأغنية 🎵</Hint>
+      <PlayerWrapper>
+        <FloatingButton onClick={toggle} $playing={playing} aria-label="تشغيل الأغنية">
+          {playing ? <FaPause /> : <FaMusic />}
+        </FloatingButton>
+        <Bars $playing={playing}>
+          <span />
+          <span />
+          <span />
+        </Bars>
+      </PlayerWrapper>
+      <Hint $show={showHint}>دوسي على الزرار عشان تسمعي الأغنية 🎵</Hint>
     </>
   );
 };

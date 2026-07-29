@@ -37,11 +37,14 @@ const messages = [
 
 
 const Container = styled.div`
-  background: rgba(255, 255, 255, 0.85);
-  border-radius: 18px;
-  padding: 30px;
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-radius: 22px;
+  padding: 32px 30px;
   margin: 40px auto;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 30px rgba(210, 54, 105, 0.13), 0 0 0 1px rgba(255, 255, 255, 0.4) inset;
+  border: 1px solid rgba(255, 202, 212, 0.6);
   text-align: center;
   max-width: 800px;
   transform: scale(0.9);
@@ -99,7 +102,7 @@ const DailyMessage = () => {
     containerRef.current.addEventListener('mouseenter', () => {
       gsap.to(containerRef.current, {
         scale: 1.02,
-        boxShadow: '0 8px 25px rgba(0, 0, 0, 0.15)',
+        boxShadow: '0 14px 38px rgba(210, 54, 105, 0.22)',
         duration: 0.3
       });
     });
@@ -107,7 +110,7 @@ const DailyMessage = () => {
     containerRef.current.addEventListener('mouseleave', () => {
       gsap.to(containerRef.current, {
         scale: 1,
-        boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)',
+        boxShadow: '0 10px 30px rgba(210, 54, 105, 0.13)',
         duration: 0.3
       });
     });

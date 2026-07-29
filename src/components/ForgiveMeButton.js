@@ -14,11 +14,14 @@ const pleas = [
 const Wrapper = styled.div`
   max-width: 800px;
   margin: 20px auto 50px;
-  background: rgba(255, 255, 255, 0.85);
-  border-radius: 18px;
-  padding: 35px 25px;
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-radius: 22px;
+  padding: 38px 25px;
   text-align: center;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 30px rgba(210, 54, 105, 0.13), 0 0 0 1px rgba(255, 255, 255, 0.4) inset;
+  border: 1px solid rgba(255, 202, 212, 0.6);
   position: relative;
   overflow: hidden;
 `;

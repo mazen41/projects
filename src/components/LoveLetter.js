@@ -6,14 +6,16 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 gsap.registerPlugin(ScrollTrigger);
 
 const LetterContainer = styled.div`
-  background: rgba(255, 255, 255, 0.92);
-  border-radius: 18px;
-  padding: 40px;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-radius: 22px;
+  padding: 42px 40px;
   margin: 40px auto;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 35px rgba(210, 54, 105, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.4) inset;
   position: relative;
   max-width: 800px;
-  border: 1px solid #ffcad4;
+  border: 1px solid rgba(255, 202, 212, 0.7);
   transform: translateY(50px);
   opacity: 0;
 `;
@@ -64,7 +66,7 @@ const Stamp = styled.div`
   color: white;
   font-weight: bold;
   transform: rotate(-15deg);
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 14px rgba(255, 106, 136, 0.5);
   font-family: 'Lateef', cursive;
   font-size: 1.5rem;
   opacity: 0;
