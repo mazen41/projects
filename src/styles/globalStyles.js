@@ -5,7 +5,7 @@ export const GlobalStyle = createGlobalStyle`
   
   body {
     font-family: 'Scheherazade New', serif;
-    background: linear-gradient(135deg, #fff5f5 0%, #f8e8ff 100%);
+    background: linear-gradient(135deg, #fff8f0 0%, #ffeef2 45%, #fff4e0 100%);
     margin: 0;
     padding: 0;
     direction: rtl;
@@ -26,15 +26,15 @@ export const GlobalStyle = createGlobalStyle`
   }
   
   ::-webkit-scrollbar-track {
-    background: #f8e8ff;
+    background: #ffeef2;
   }
   
   ::-webkit-scrollbar-thumb {
-    background: #d23669;
+    background: linear-gradient(180deg, #ff8fa3 0%, #ffb347 100%);
     border-radius: 5px;
   }
   
   ::-webkit-scrollbar-thumb:hover {
-    background: #a51c4a;
+    background: #d23669;
   }
 `;

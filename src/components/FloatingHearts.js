@@ -3,11 +3,12 @@ import { gsap } from 'gsap';
 
 const FloatingHearts = () => {
   useEffect(() => {
-    const colors = ['#ff6b6b', '#ff8e8e', '#f8a5c2', '#d23669', '#ffb3b3'];
-    
+    const colors = ['#ff6b6b', '#ff8e8e', '#f8a5c2', '#d23669', '#ffb3b3', '#ffb347'];
+    const symbols = ['❤', '❤', '❤', '❤', '🥺'];
+
     for (let i = 0; i < 30; i++) {
       const heart = document.createElement('div');
-      heart.innerHTML = '❤';
+      heart.innerHTML = symbols[Math.floor(Math.random() * symbols.length)];
       heart.style.position = 'fixed';
       heart.style.fontSize = `${Math.random() * 20 + 10}px`;
       heart.style.color = colors[Math.floor(Math.random() * colors.length)];
@@ -31,7 +32,7 @@ const FloatingHearts = () => {
 
     return () => {
       document.querySelectorAll('div').forEach(el => {
-        if (el.innerHTML === '❤') el.remove();
+        if (el.innerHTML === '❤' || el.innerHTML === '🥺') el.remove();
       });
     };
   }, []);
