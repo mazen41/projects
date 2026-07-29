@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { FaMusic, FaPause } from 'react-icons/fa';
 
@@ -55,7 +55,31 @@ const Hint = styled.span`
 const MusicPlayer = () => {
   const audioRef = useRef(null);
   const [playing, setPlaying] = useState(false);
-  const [showHint, setShowHint] = useState(true);
+  const [showHint, setShowHint] = useState(false);
+
+  useEffect(() => {
+    // try to autoplay on load; browsers may block sound before any user
+    // interaction with the page, so we fall back gracefully if blocked
+    const tryAutoplay = () => {
+      if (!audioRef.current) return;
+      audioRef.current.play()
+        .then(() => setPlaying(true))
+        .catch(() => {
+          // autoplay blocked by browser - wait for the first click/tap
+          // anywhere on the page, then start it automatically
+          setShowHint(true);
+          const startOnInteraction = () => {
+            audioRef.current.play().then(() => setPlaying(true)).catch(() => {});
+            setShowHint(false);
+            document.removeEventListener('click', startOnInteraction);
+            document.removeEventListener('touchstart', startOnInteraction);
+          };
+          document.addEventListener('click', startOnInteraction);
+          document.addEventListener('touchstart', startOnInteraction);
+        });
+    };
+    tryAutoplay();
+  }, []);
 
   const toggle = () => {
     if (!audioRef.current) return;
@@ -79,7 +103,7 @@ const MusicPlayer = () => {
       <FloatingButton onClick={toggle} $playing={playing} aria-label="تشغيل الأغنية">
         {playing ? <FaPause /> : <FaMusic />}
       </FloatingButton>
-      <Hint $show={showHint}>دوسي شغّلي الأغنية 🎵</Hint>
+      <Hint $show={showHint}>دوسي في أي مكان عشان تشتغل الأغنية 🎵</Hint>
     </>
   );
 };
