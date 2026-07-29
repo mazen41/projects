@@ -6,87 +6,65 @@ import { TextPlugin } from 'gsap/TextPlugin';
 gsap.registerPlugin(TextPlugin);
 
 const HeaderContainer = styled.header`
-  background: linear-gradient(135deg, #ff9a8b 0%, #ff6a88 45%, #ffb347 100%);
-  color: white;
-  padding: 35px 0;
+  background: linear-gradient(160deg, var(--ink) 0%, #4a1730 100%);
+  color: var(--paper);
+  padding: 46px 20px 60px;
   text-align: center;
-  border-radius: 0 0 20px 20px;
-  box-shadow: 0 4px 15px rgba(210, 54, 105, 0.3);
-  margin-bottom: 30px;
   position: relative;
   overflow: hidden;
+  clip-path: polygon(0 0, 100% 0, 100% 88%, 92% 100%, 84% 90%, 76% 100%, 68% 90%, 60% 100%, 52% 90%, 44% 100%, 36% 90%, 28% 100%, 20% 90%, 12% 100%, 4% 90%, 0 100%);
+`;
+
+const Eyebrow = styled.p`
+  font-family: 'Cairo', sans-serif;
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+  color: var(--gold-soft);
+  opacity: 0;
+  margin: 0 0 10px;
 `;
 
 const Title = styled.h1`
-  font-family: 'Lateef', cursive;
-  font-size: 3.2rem;
+  font-family: 'Aref Ruqaa', serif;
+  font-size: 3rem;
   margin: 0;
-  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
-  transform: translateY(-20px);
+  transform: translateY(-16px);
   opacity: 0;
 `;
 
 const Subtitle = styled.p`
-  font-size: 1.7rem;
-  margin: 12px 0 0;
-  opacity: 0.95;
-  font-family: 'Scheherazade New', serif;
+  font-size: 1.5rem;
+  margin: 14px 0 0;
+  opacity: 0.9;
+  font-family: 'Markazi Text', serif;
+  min-height: 2rem;
 `;
 
 const AnimatedHeader = () => {
+  const eyebrowRef = useRef(null);
   const titleRef = useRef(null);
   const subtitleRef = useRef(null);
 
   useEffect(() => {
-    // gentle, sincere entrance - not bouncy, feels calm and genuine
-    gsap.to(titleRef.current, {
-      y: 0,
-      opacity: 1,
-      duration: 1.8,
-      ease: "power2.out"
-    });
+    const tl = gsap.timeline();
 
-    gsap.to(subtitleRef.current, {
-      duration: 2.8,
-      delay: 0.6,
-      text: {
-        value: "بحبك أكتر من أي حاجة في الدنيا يا منة 🩷",
-        speed: 0.6
-      },
-      ease: "power2.inOut"
-    });
-
-    // soft floating hearts + a few sorry-face emojis mixed in
-    const symbols = ['❤', '❤', '❤', '🥺', '🩷'];
-    for (let i = 0; i < 10; i++) {
-      const el = document.createElement('div');
-      el.innerHTML = symbols[Math.floor(Math.random() * symbols.length)];
-      el.style.position = 'absolute';
-      el.style.fontSize = `${Math.random() * 18 + 14}px`;
-      el.style.color = `rgba(255, 255, 255, ${Math.random() * 0.5 + 0.3})`;
-      el.style.top = `${Math.random() * 100}%`;
-      el.style.left = `${Math.random() * 100}%`;
-      el.style.opacity = '0';
-      el.style.zIndex = '0';
-      el.style.pointerEvents = 'none';
-      titleRef.current.parentNode.appendChild(el);
-
-      gsap.to(el, {
-        y: -40,
-        x: Math.random() * 30 - 15,
-        opacity: 0.8,
-        duration: 3.5 + Math.random() * 2,
-        repeat: -1,
-        yoyo: true,
-        ease: "sine.inOut",
-        delay: Math.random() * 2.5
-      });
-    }
+    tl.to(eyebrowRef.current, { opacity: 0.9, duration: 0.6, ease: 'power1.out' })
+      .to(titleRef.current, { y: 0, opacity: 1, duration: 1.1, ease: 'power2.out' }, '-=0.2')
+      .to(
+        subtitleRef.current,
+        {
+          duration: 2.2,
+          text: { value: 'بحبك أكتر من أي حاجة في الدنيا يا منة' },
+          ease: 'none'
+        },
+        '+=0.1'
+      );
   }, []);
 
   return (
     <HeaderContainer>
-      <Title ref={titleRef}>آسف يا منة 🥺</Title>
+      <Eyebrow ref={eyebrowRef}>رسالة خاصة</Eyebrow>
+      <Title ref={titleRef}>آسف يا منة</Title>
       <Subtitle ref={subtitleRef}></Subtitle>
     </HeaderContainer>
   );

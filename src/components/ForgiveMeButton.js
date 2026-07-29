@@ -3,98 +3,117 @@ import styled from 'styled-components';
 import { gsap } from 'gsap';
 
 const pleas = [
-  "سامحيني؟ 🥺",
-  "بجد بجد آسف يا منة 🙏",
-  "طب لو اشتريلك حاجة تحبيها؟ 🎁",
-  "هرقصلك رقصة غبية لو سامحتيني 💃",
-  "حتى لو تقوليلي أعتذر ١٠٠ مرة تانية، جاهز 😭",
-  "طيب أنا رسمياً هستسلم... بس سامحيني 🏳️",
+  "سامحيني؟",
+  "بجد بجد آسف يا منة",
+  "طب لو اشتريلك حاجة تحبيها؟",
+  "هرقصلك رقصة غبية لو سامحتيني",
+  "حتى لو تقوليلي أعتذر ١٠٠ مرة تانية، جاهز",
+  "طيب أنا رسمياً هستسلم... بس سامحيني"
 ];
 
 const Wrapper = styled.div`
-  max-width: 800px;
-  margin: 20px auto 50px;
-  background: rgba(255, 255, 255, 0.65);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border-radius: 22px;
-  padding: 38px 25px;
+  max-width: 620px;
+  margin: 20px auto 60px;
+  background: var(--paper);
+  border: 1.5px dashed var(--gold);
+  border-radius: 10px;
+  padding: 40px 25px;
   text-align: center;
-  box-shadow: 0 10px 30px rgba(210, 54, 105, 0.13), 0 0 0 1px rgba(255, 255, 255, 0.4) inset;
-  border: 1px solid rgba(255, 202, 212, 0.6);
   position: relative;
   overflow: hidden;
 `;
 
+const Eyebrow = styled.p`
+  font-family: 'Cairo', sans-serif;
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+  letter-spacing: 0.5px;
+  margin: 0 0 6px;
+  opacity: 0.8;
+`;
+
 const Title = styled.h2`
-  color: #d23669;
-  font-family: 'Lateef', cursive;
-  font-size: 2rem;
-  margin-bottom: 10px;
+  color: var(--ink);
+  font-family: 'Aref Ruqaa', serif;
+  font-size: 1.9rem;
+  margin: 0 0 22px;
 `;
 
 const PleaText = styled.p`
-  font-size: 1.6rem;
-  color: #5a3d5c;
-  margin-bottom: 25px;
-  min-height: 2.4rem;
+  font-size: 1.4rem;
+  font-family: 'Markazi Text', serif;
+  color: var(--charcoal);
+  margin-bottom: 26px;
+  min-height: 2.2rem;
 `;
 
 const ButtonRow = styled.div`
   display: flex;
   justify-content: center;
-  gap: 20px;
+  gap: 16px;
   flex-wrap: wrap;
 `;
 
 const YesButton = styled.button`
-  background: linear-gradient(135deg, #ff9a8b 0%, #ff6a88 100%);
-  color: white;
+  background: var(--ink);
+  color: var(--paper);
   border: none;
-  border-radius: 30px;
-  padding: 14px 30px;
-  font-size: 1.3rem;
-  font-family: 'Scheherazade New', serif;
+  border-radius: 6px;
+  padding: 13px 28px;
+  font-size: 1.05rem;
+  font-family: 'Cairo', sans-serif;
+  font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 4px 10px rgba(255, 106, 136, 0.4);
+  box-shadow: 0 6px 16px rgba(107, 31, 59, 0.3);
   transition: transform 0.2s;
 
   &:hover {
-    transform: scale(1.05);
+    transform: translateY(-2px);
   }
 `;
 
 const NoButton = styled.button`
-  background: white;
-  color: #d23669;
-  border: 2px solid #ffcad4;
-  border-radius: 30px;
-  padding: 14px 30px;
-  font-size: 1.3rem;
-  font-family: 'Scheherazade New', serif;
+  background: transparent;
+  color: var(--ink-soft);
+  border: 1.5px solid var(--gold-soft);
+  border-radius: 6px;
+  padding: 13px 28px;
+  font-size: 1.05rem;
+  font-family: 'Cairo', sans-serif;
   cursor: pointer;
-  transition: transform 0.2s ease, font-size 0.2s ease;
+  transition: transform 0.2s ease;
 `;
 
-const ForgivenBadge = styled.div`
-  font-size: 1.8rem;
-  color: #d23669;
-  font-family: 'Lateef', cursive;
-  margin-top: 10px;
+const StampMark = styled.div`
+  font-family: 'Aref Ruqaa', serif;
+  font-size: 2.4rem;
+  color: var(--ink);
+  border: 4px solid var(--ink);
+  border-radius: 10px;
+  display: inline-block;
+  padding: 10px 34px;
+  transform: rotate(-6deg) scale(0);
+  opacity: 0.9;
+`;
+
+const ForgivenSub = styled.p`
+  font-family: 'Markazi Text', serif;
+  font-size: 1.2rem;
+  color: var(--ink-soft);
+  margin-top: 18px;
 `;
 
 const ForgiveMeButton = () => {
   const [step, setStep] = useState(0);
   const [forgiven, setForgiven] = useState(false);
-  const wrapperRef = useRef(null);
   const noBtnRef = useRef(null);
+  const stampRef = useRef(null);
 
   const handleNo = () => {
-    // the "no" button gets shy and shrinks a little each time — a playful nudge toward yes
     setStep((prev) => (prev + 1 < pleas.length ? prev + 1 : prev));
     if (noBtnRef.current) {
       gsap.to(noBtnRef.current, {
-        scale: Math.max(0.55, 1 - (step + 1) * 0.12),
+        scale: Math.max(0.6, 1 - (step + 1) * 0.1),
         duration: 0.3,
         ease: 'back.out(2)'
       });
@@ -103,44 +122,34 @@ const ForgiveMeButton = () => {
 
   const handleYes = () => {
     setForgiven(true);
-    for (let i = 0; i < 18; i++) {
-      const heart = document.createElement('div');
-      heart.innerHTML = ['❤', '🩷', '🎉', '💛'][Math.floor(Math.random() * 4)];
-      heart.style.position = 'absolute';
-      heart.style.fontSize = `${Math.random() * 20 + 16}px`;
-      heart.style.left = `${Math.random() * 100}%`;
-      heart.style.top = '50%';
-      heart.style.opacity = '1';
-      heart.style.pointerEvents = 'none';
-      wrapperRef.current.appendChild(heart);
-
-      gsap.to(heart, {
-        y: -(120 + Math.random() * 100),
-        x: Math.random() * 160 - 80,
-        rotation: Math.random() * 360,
-        opacity: 0,
-        duration: 1.5 + Math.random(),
-        ease: 'power1.out',
-        onComplete: () => heart.remove()
-      });
-    }
+    requestAnimationFrame(() => {
+      if (stampRef.current) {
+        gsap.to(stampRef.current, {
+          scale: 1,
+          duration: 0.5,
+          ease: 'back.out(3)'
+        });
+      }
+    });
   };
 
   return (
-    <Wrapper ref={wrapperRef}>
+    <Wrapper>
       {!forgiven ? (
         <>
+          <Eyebrow>طلب رسمي</Eyebrow>
           <Title>لسه زعلانة مني؟</Title>
           <PleaText>{pleas[step]}</PleaText>
           <ButtonRow>
-            <YesButton onClick={handleYes}>سامحتك ❤️</YesButton>
-            <NoButton ref={noBtnRef} onClick={handleNo}>لسه زعلانة 😤</NoButton>
+            <YesButton onClick={handleYes}>سامحتك</YesButton>
+            <NoButton ref={noBtnRef} onClick={handleNo}>لسه زعلانة</NoButton>
           </ButtonRow>
         </>
       ) : (
         <>
-          <Title>تم رسمياً 🎉</Title>
-          <ForgivenBadge>سامحتيني يا منة! بحبك 🩷</ForgivenBadge>
+          <Eyebrow>تم الاعتماد</Eyebrow>
+          <StampMark ref={stampRef}>مقبول</StampMark>
+          <ForgivenSub>سامحتيني يا منة، وبحبك 🩷</ForgivenSub>
         </>
       )}
     </Wrapper>

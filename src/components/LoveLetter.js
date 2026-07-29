@@ -6,69 +6,72 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 gsap.registerPlugin(ScrollTrigger);
 
 const LetterContainer = styled.div`
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border-radius: 22px;
-  padding: 42px 40px;
-  margin: 40px auto;
-  box-shadow: 0 10px 35px rgba(210, 54, 105, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.4) inset;
+  background: var(--paper);
+  background-image: repeating-linear-gradient(
+    var(--paper) 0px,
+    var(--paper) 37px,
+    rgba(201, 161, 91, 0.15) 38px
+  );
+  border-radius: 4px;
+  padding: 50px 44px;
+  margin: 50px auto;
+  box-shadow: 0 18px 45px rgba(107, 31, 59, 0.18);
   position: relative;
-  max-width: 800px;
-  border: 1px solid rgba(255, 202, 212, 0.7);
+  max-width: 760px;
+  border: 1px solid var(--paper-edge);
+  border-right: 4px solid var(--ink);
   transform: translateY(50px);
   opacity: 0;
 `;
 
 const LetterTitle = styled.h1`
-  color: #d23669;
+  color: var(--ink);
   text-align: center;
-  font-family: 'Lateef', cursive;
-  margin-bottom: 30px;
-  font-size: 2.8rem;
+  font-family: 'Aref Ruqaa', serif;
+  margin: 0 0 34px;
+  font-size: 2.4rem;
 `;
 
 const LetterContent = styled.div`
-  font-size: 1.8rem;
-  line-height: 2.2;
+  font-size: 1.65rem;
+  line-height: 2.15;
   text-align: right;
-  font-family: 'Scheherazade New', serif;
-  color: #5a3d5c;
+  font-family: 'Markazi Text', serif;
+  color: var(--charcoal);
 
   p {
-    margin-bottom: 2rem;
+    margin: 0 0 1.9rem;
     opacity: 0;
-    transform: translateX(30px);
+    transform: translateX(24px);
   }
 `;
 
 const Signature = styled.p`
   text-align: left;
-  font-style: italic;
-  margin-top: 40px;
-  color: #d23669;
-  font-weight: bold;
-  font-size: 1.6rem;
+  font-family: 'Aref Ruqaa', serif;
+  margin-top: 36px;
+  color: var(--ink);
+  font-size: 1.5rem;
   opacity: 0;
 `;
 
 const Stamp = styled.div`
   position: absolute;
-  top: 30px;
-  left: 30px;
-  width: 74px;
-  height: 74px;
-  background: linear-gradient(135deg, #ff9a8b 0%, #ffb347 100%);
+  top: 26px;
+  left: 26px;
+  width: 68px;
+  height: 68px;
+  background: radial-gradient(circle at 35% 30%, var(--gold-soft), var(--gold) 75%);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
+  color: var(--ink);
   font-weight: bold;
-  transform: rotate(-15deg);
-  box-shadow: 0 4px 14px rgba(255, 106, 136, 0.5);
-  font-family: 'Lateef', cursive;
-  font-size: 1.5rem;
+  transform: rotate(-12deg);
+  box-shadow: 0 4px 12px rgba(201, 161, 91, 0.5);
+  font-family: 'Aref Ruqaa', serif;
+  font-size: 1.3rem;
   opacity: 0;
   scale: 0;
 `;
@@ -84,20 +87,20 @@ const LoveLetter = () => {
       y: 0,
       opacity: 1,
       duration: 1,
-      ease: "power2.out",
+      ease: 'power2.out',
       scrollTrigger: {
         trigger: letterRef.current,
-        start: "top 80%",
-      },
+        start: 'top 85%'
+      }
     });
 
     gsap.to(stampRef.current, {
-      rotation: -15,
+      rotation: -12,
       scale: 1,
       opacity: 1,
-      duration: 1,
-      delay: 0.5,
-      ease: "back.out(4)",
+      duration: 0.9,
+      delay: 0.4,
+      ease: 'back.out(3)'
     });
 
     contentRefs.current.forEach((ref, i) => {
@@ -105,48 +108,23 @@ const LoveLetter = () => {
         x: 0,
         opacity: 1,
         duration: 0.8,
-        delay: 0.3 + i * 0.2,
+        delay: 0.25 + i * 0.18,
         scrollTrigger: {
           trigger: ref,
-          start: "top 90%",
-        },
+          start: 'top 90%'
+        }
       });
     });
 
     gsap.to(signatureRef.current, {
       opacity: 1,
       duration: 1,
-      delay: 0.5,
+      delay: 0.4,
       scrollTrigger: {
         trigger: signatureRef.current,
-        start: "top 90%",
-      },
+        start: 'top 90%'
+      }
     });
-
-    for (let i = 0; i < 12; i++) {
-      const heart = document.createElement('div');
-      heart.innerHTML = '❤';
-      heart.style.position = 'absolute';
-      heart.style.fontSize = `${Math.random() * 20 + 15}px`;
-      heart.style.color = `hsl(${Math.random() * 30 + 330}, 100%, 70%)`;
-      heart.style.top = `${Math.random() * 100}%`;
-      heart.style.left = `${Math.random() * 100}%`;
-      heart.style.opacity = '0.7';
-      heart.style.zIndex = '1';
-      heart.style.pointerEvents = 'none';
-      letterRef.current.appendChild(heart);
-
-      gsap.to(heart, {
-        y: -100,
-        x: Math.random() * 100 - 50,
-        rotation: Math.random() * 360,
-        opacity: 0,
-        duration: 8 + Math.random() * 10,
-        repeat: -1,
-        delay: Math.random() * 5,
-        ease: "none",
-      });
-    }
   }, []);
 
   const addToRefs = (el) => {
@@ -168,7 +146,7 @@ const LoveLetter = () => {
         <p ref={addToRefs}>أنا موجود جنبك طول ما انتي عايزاني وطول ما انتي حابة وجودي.</p>
         <p ref={addToRefs}>سامحيني يا منة… مش عشان نعدّي الموضوع، لكن عشان انتي فعلاً مهمة جداً عندي ومش متخيل حياتي من غيرك.</p>
       </LetterContent>
-      <Signature ref={signatureRef}>آسف قوي يا منة… وبحبك أكتر من أي حاجة 🩷</Signature>
+      <Signature ref={signatureRef}>آسف قوي يا منة… وبحبك أكتر من أي حاجة</Signature>
     </LetterContainer>
   );
 };
